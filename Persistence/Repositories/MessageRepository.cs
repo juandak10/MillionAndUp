@@ -16,7 +16,7 @@ namespace Persistence.Repositories
 
         public async Task<List<Message>> GetAll()
         {
-            return await millionAndUpContext.Message.ToListAsync();
+            return await millionAndUpContext.Messages.ToListAsync();
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Domain.Entities
 {
     public partial class Account
     {
+        [Key]
         public Guid Id { get; set; }
 
         [Required]
@@ -48,8 +49,6 @@ namespace Domain.Entities
         [Required]
         public RoleType RoleType { get; set; }
 
-        public string Token { get; set; }
-
         [Required]
         [DataType(DataType.DateTime)]
         public DateTime Create { get; set; }
@@ -58,8 +57,9 @@ namespace Domain.Entities
         [DataType(DataType.DateTime)]
         public DateTime Update { get; set; }
 
-        //public virtual ICollection<Property> Properties { get; set; }
-        //public virtual ICollection<PropertyTrace> PropertyTraceOwnerNewNavigations { get; set; }
-        //public virtual ICollection<PropertyTrace> PropertyTraceOwnerOldNavigations { get; set; }
+        [Required]
+        public bool Enabled { get; set; }
+
+        public virtual List<Property> Properties { get; set; }
     }
 }

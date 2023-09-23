@@ -1,5 +1,4 @@
-﻿using Api.Extensions;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Domain.References;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,13 +11,11 @@ namespace Api.Controllers
     {
         private readonly IAccountServices accountServices;
         private readonly IConfiguration config;
-        private ConfigExtensions configExtensions;
 
         public AccountController(IAccountServices accountServices, IConfiguration config)
         {
             this.accountServices = accountServices;
             this.config = config;
-            this.configExtensions = new ConfigExtensions();
         }
 
 
@@ -31,13 +28,14 @@ namespace Api.Controllers
         {
             string srtoken = string.Empty;
 
-            configExtensions.TryRetrieveToken(Request, out srtoken);
+            //configExtensions.TryRetrieveToken(Request, out srtoken);
 
-            var account = configExtensions.GetToken(srtoken);
-            if (account != null && !string.IsNullOrEmpty(account.Email)) account = accountServices.Get(account.Id).Result;
+            //var account = configExtensions.GetToken(srtoken);
+            //if (account != null && !string.IsNullOrEmpty(account.Email)) account = accountServices.Get(account.Id).Result;
 
-            if (account != null && !string.IsNullOrEmpty(account.Email)) return Ok(account);
-            return NotFound(null);
+            //if (account != null && !string.IsNullOrEmpty(account.Email))
+            return Ok();
+            //return NotFound(null);
         }
 
         // POST api/<AccountController>
@@ -49,9 +47,8 @@ namespace Api.Controllers
 
             var response = await accountServices.GetAccountLogin(loginRequest);
 
-            if (response != null && response.Data != null)
+            if (response != null && response.Data != null && !string.IsNullOrEmpty(response.Token))
             {
-                response.Data.Token = configExtensions.Generate(config, response.Data);
                 return Ok(response);
             }
 

@@ -17,6 +17,5 @@ namespace Application.Interfaces
 
         public Task<List<Account>> GetAll();
 
-        public Task<BaseResponse<Account>> ResponseDefault(int code, MessageType messageType, string additionalMessage = "");
     }
 }

@@ -5,8 +5,8 @@ namespace Domain.Entities
 {
     public class Message
     {
-        [Required]
-        public int Code { get; set; }
+        [Key]
+        public MessageCode MessageCode { get; set; }
 
         [Required]
         public MessageType MessageType { get; set; }

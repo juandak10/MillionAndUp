@@ -11,7 +11,7 @@ namespace Persistence
     {
         public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<MillionAndUpContext>(options => options.UseSqlServer(configuration.GetConnectionString("MillionAndUpDB"), b => b.MigrationsAssembly("Infrastructure\\Persistence")));
+            services.AddDbContext<MillionAndUpContext>(options => options.UseSqlServer(configuration.GetConnectionString("MillionAndUpDB"), b => b.MigrationsAssembly("Persistence")));
 
             services
                 .AddTransient<IAccountRepository, AccountRepository>()

@@ -14,7 +14,7 @@ namespace Application.Services
         }
 
         //Method to get success or error messages from database
-        public async Task<string> GetMessage(int Code, MessageType messageType)
+        public async Task<string> GetMessage(MessageCode messageCode, MessageType messageType)
         {
             var message = string.Empty;
 
@@ -22,7 +22,7 @@ namespace Application.Services
 
             if (result != null && result.Any())
             {
-                var messages = result.Where(x => x.Code == Code && x.MessageType == messageType);
+                var messages = result.Where(x => x.MessageCode == messageCode && x.MessageType == messageType);
 
                 if (messages != null && messages.Any())
                 {

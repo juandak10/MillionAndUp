@@ -123,8 +123,25 @@ namespace Domain.Enums
         {
             None = 0,
             Success = 1,
-            Error = 2
+            Error = 2,
+            Minimum = 3,
+            Info = 4
         }
+
+        //Code of api response messages
+        public enum MessageCode
+        {
+            None = 0,
+            Success = 1,
+            Error = 2,
+            DoesNotexist = 3,
+            Required = 4,
+            Exceeds = 5,
+            TransactionNotProcessed=6,
+            Exists = 7,
+            Minimum = 8
+        }
+
 
         //Sort property search
         public enum OrderProperty

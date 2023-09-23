@@ -7,14 +7,18 @@ namespace Domain.References
         public BaseResponse()
         {
             Message = string.Empty;
-            Code = 0;
+            MessageCode = MessageCode.None;
             MessageType = MessageType.None;
+            Token = string.Empty;
         }
 
-        public int Code { get; set; }
-        public string Message { get; set; }
+        public MessageCode MessageCode { get; set; }
 
         public MessageType MessageType { get; set; }
+
+        public string Message { get; set; }
+
+        public string Token { get; set; }
 
         public T Data { get; set; }
 

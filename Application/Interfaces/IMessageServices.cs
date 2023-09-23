@@ -9,6 +9,6 @@ namespace Application.Interfaces
 {
     public interface IMessageServices
     {
-        public Task<string> GetMessage(int Code, MessageType messageType);
+        public Task<string> GetMessage(MessageCode messageCode, MessageType messageType);
     }
 }

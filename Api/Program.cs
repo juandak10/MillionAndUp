@@ -28,6 +28,16 @@ var mapperConfig = new MapperConfiguration(m =>
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
+//Corn Configurate 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.AllowAnyOrigin();
+        builder.AllowAnyHeader();
+        builder.AllowAnyMethod();
+    });
+});
 
 //Authentication Configuration
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -40,8 +50,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration.GetSection("Jwt")["Issuer"],
-            ValidAudience = builder.Configuration.GetSection("Jwt")["Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt")["Key"]))
         };
 
@@ -50,29 +58,35 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //Swagger configuration token
 builder.Services.AddSwaggerGen(setup =>
 {
-    // Include 'SecurityScheme' to use JWT Authentication
-    var jwtSecurityScheme = new OpenApiSecurityScheme
+    setup.SwaggerDoc("v1", new OpenApiInfo
     {
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        Name = "JWT Authentication",
+        Title = "Million and Up",
+        Version = "v1",
+    });
+
+    setup.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header:",
+        Name = "Authorization",
         In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Description = "Put **_ONLY_** your JWT Bearer token on textbox below!",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
 
-        Reference = new OpenApiReference
-        {
-            Id = JwtBearerDefaults.AuthenticationScheme,
-            Type = ReferenceType.SecurityScheme
-        }
-    };
-
-    setup.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
-    setup.SwaggerDoc("v1", new OpenApiInfo { Title = "Million And Up", Version = "v1" });
     setup.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
-        { jwtSecurityScheme, Array.Empty<string>() }
-    });
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+     });
 
 });
 
@@ -88,8 +102,21 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    // Configuración de Swagger en entorno de desarrollo
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+    });
+}
+else if (app.Environment.IsProduction())
+{
+    // Configuración de Swagger en entorno de producción
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1 (Producción)");
+    });
 }
 
 //Exception Control
@@ -124,6 +151,7 @@ app.UseExceptionHandler(appError =>
     });
 });
 
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 

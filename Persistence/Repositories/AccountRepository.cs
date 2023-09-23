@@ -25,7 +25,7 @@ namespace Persistence.Repositories
         public async Task<Account> Delete(Guid? id)
         {
             var account = await  Get(id);
-            account = millionAndUpContext.Account.Remove(account).Entity;
+            account = millionAndUpContext.Accounts.Remove(account).Entity;
             millionAndUpContext.SaveChanges();
             return account;
         }
@@ -33,13 +33,13 @@ namespace Persistence.Repositories
         //Get account from database
         public async Task<Account> Get(Guid? id)
         {
-            return await millionAndUpContext.Account.Where(x => x.Id == id).FirstOrDefaultAsync();
+            return await millionAndUpContext.Accounts.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
         //Get all accounts from database
         public async Task<List<Account>> GetAll()
         {
-            return await millionAndUpContext.Account.ToListAsync();
+            return await millionAndUpContext.Accounts.ToListAsync();
         }
 
         //Add account from database
@@ -57,7 +57,7 @@ namespace Persistence.Repositories
         //Get account with email and password from database
         public async Task<Account> GetForEmailAndPassword(string email, string password)
         {
-            return await millionAndUpContext.Account.Where(x => x.Email == email && x.Password == password).FirstOrDefaultAsync();
+            return await millionAndUpContext.Accounts.Where(x => x.Email == email && x.Password == password).FirstOrDefaultAsync();
         }
 
     }
