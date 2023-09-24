@@ -2,10 +2,13 @@
 using Application.Interfaces;
 using Domain.Entities;
 using Domain.References;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities.Tools;
@@ -48,6 +51,25 @@ namespace Application.Services
             return response;
         }
 
+        //Method to obtain an account for token
+        public async Task<Account> GetForToken(string srtoken)
+        {
+            Account accountEntity = new Account();
+            var claims = jwtToken.GetClaims(srtoken);
+            if (claims != null && claims.Any())
+            {
+                var id = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+                Guid guid;
+                if (Guid.TryParse(id, out guid))
+                {
+                    accountEntity = await accountRepository.Get(guid);
+                }
+
+            }
+
+            return accountEntity;
+        }
+
         //Method to get account for id
         public async Task<Account> Get(Guid? id)
         {
@@ -71,43 +93,52 @@ namespace Application.Services
         }
 
         //Method to delete a account
-        public BaseResponse<Account> Delete(Guid? id)
+        public async Task<BaseResponse<Account>> Delete(Guid? id)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponse<Account>();
+
+            if (!id.HasValue) return await ResponseDefault(MessageCode.Required, MessageType.Error, "Id");
+
+            var accountEntity = await accountRepository.Delete(id);
+
+            response = await ResponseDefault(MessageCode.Success, MessageType.Success, "Delete Account");
+            response.Data = accountEntity;
+            
+            return response;
         }
 
         //Method to add a account
-        public BaseResponse<Account> Insert(Account @object)
+        public async Task<BaseResponse<Account>> Insert(Account account)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponse<Account>();
+
+            if (account == null) return await ResponseDefault(MessageCode.Required, MessageType.Error, "Account");
+
+            var accountEntity = await accountRepository.Insert(account);
+
+            response = await ResponseDefault(MessageCode.Success, MessageType.Success, "Add Account");
+            response.Data = accountEntity;
+
+            return response;
         }
 
         //Method to update a account
-        public BaseResponse<Account> Update(Account @object)
+        public async Task<BaseResponse<Account>> Update(Account account)
         {
-            throw new NotImplementedException();
-        }
+            var response = new BaseResponse<Account>();
 
-        //Method to obtain an account by email and password
-        private async Task<Account> GetForEmailAndPassword(string email, string password)
-        {
-            return await accountRepository.GetForEmailAndPassword(email, password);
-        }
+            if (account == null) return await ResponseDefault(MessageCode.Required, MessageType.Error, "Account");
 
-        private async Task<BaseResponse<Account>> ValidateLoginRequest(LoginRequest login)
-        {
-            if (login == null)
-                return await ResponseDefault(MessageCode.Required, MessageType.Error, "Login");
-            if (string.IsNullOrEmpty(login.Email))
-                return await ResponseDefault(MessageCode.Required, MessageType.Error, "Email");
-            if (string.IsNullOrEmpty(login.Password))
-                return await ResponseDefault(MessageCode.Required, MessageType.Error, "Passwork");
+            var accountEntity = await accountRepository.Update(account);
 
-            return new BaseResponse<Account>();
+            response = await ResponseDefault(MessageCode.Success, MessageType.Success, "Update Account");
+            response.Data = accountEntity;
+
+            return response;
         }
 
         //Method create token sesion
-        public string CreateToken(Account account)
+        private string CreateToken(Account account)
         {
             try
             {
@@ -118,6 +149,25 @@ namespace Application.Services
                 return string.Empty;
             }
 
+        }
+
+        //Method to obtain an account by email and password
+        private async Task<Account> GetForEmailAndPassword(string email, string password)
+        {
+            return await accountRepository.GetForEmailAndPassword(email, password);
+        }
+
+        //Method to validate login request
+        private async Task<BaseResponse<Account>> ValidateLoginRequest(LoginRequest login)
+        {
+            if (login == null)
+                return await ResponseDefault(MessageCode.Required, MessageType.Error, "Login");
+            if (string.IsNullOrEmpty(login.Email))
+                return await ResponseDefault(MessageCode.Required, MessageType.Error, "Email");
+            if (string.IsNullOrEmpty(login.Password))
+                return await ResponseDefault(MessageCode.Required, MessageType.Error, "Passwork");
+
+            return new BaseResponse<Account>();
         }
 
         //Method to return response message

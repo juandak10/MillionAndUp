@@ -13,9 +13,17 @@ namespace Application.Interfaces
     {
         public Task<BaseResponse<Account>> GetAccountLogin(LoginRequest login);
 
+        public Task<Account> GetForToken(string srtoken);
+
         public Task<Account> Get(Guid? id);
 
         public Task<List<Account>> GetAll();
+
+        public Task<BaseResponse<Account>> Delete(Guid? id);
+
+        public Task<BaseResponse<Account>> Insert(Account account);
+
+        public Task<BaseResponse<Account>> Update(Account account);
 
     }
 }

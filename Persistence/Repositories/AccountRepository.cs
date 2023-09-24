@@ -1,10 +1,12 @@
 ﻿using Application.Contracts.Persistence;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using Persistence.DataBase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,9 +26,11 @@ namespace Persistence.Repositories
         //Delete account from database
         public async Task<Account> Delete(Guid? id)
         {
-            var account = await  Get(id);
-            account = millionAndUpContext.Accounts.Remove(account).Entity;
-            millionAndUpContext.SaveChanges();
+            var account = await Get(id);
+            account.Enabled = false;
+            account.Update = DateTime.Now;
+            millionAndUpContext.Accounts.Update(account);
+            await millionAndUpContext.SaveChangesAsync();
             return account;
         }
 
@@ -43,15 +47,31 @@ namespace Persistence.Repositories
         }
 
         //Add account from database
-        public Account Insert(Account @object)
+        public async Task<Account> Insert(Account account)
         {
-            throw new NotImplementedException();
+            var accountInsert = millionAndUpContext.Accounts.Add(account).Entity;
+            await millionAndUpContext.SaveChangesAsync();
+            return accountInsert;
         }
 
         //Update account from database
-        public Account Update(Account @object)
+        public async Task<Account> Update(Account account)
         {
-            throw new NotImplementedException();
+            var accountUpdate = await Get(account.Id);
+            accountUpdate.Address = account.Address;
+            accountUpdate.Update = DateTime.Now;
+            accountUpdate.RoleType = account.RoleType;
+            accountUpdate.AccountType = account.AccountType;
+            accountUpdate.Name = account.Name;
+            accountUpdate.Address = account.Address;
+            accountUpdate.Phone = account.Phone;
+            accountUpdate.Email = account.Email;
+            accountUpdate.Password = account.Password;
+            accountUpdate.PhotoUrl = account.PhotoUrl;
+            accountUpdate.Birthday = account.Birthday;
+            millionAndUpContext.Accounts.Update(accountUpdate);
+            await millionAndUpContext.SaveChangesAsync();
+            return accountUpdate;
         }
 
         //Get account with email and password from database

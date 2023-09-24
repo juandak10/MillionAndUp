@@ -16,9 +16,9 @@ namespace Application.Contracts.Persistence
 
         public Task<List<Account>> GetAll();
 
-        public Account Insert(Account @object);
+        public Task<Account> Insert(Account account);
 
-        public Account Update(Account @object);
+        public Task<Account> Update(Account account);
 
         public Task<Account> GetForEmailAndPassword(string email, string password);
 

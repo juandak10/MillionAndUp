@@ -1,11 +1,13 @@
 ﻿using Domain.Entities;
 using Domain.References;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
@@ -24,7 +26,7 @@ namespace Utilities.Tools
 
         public string CreateToken(Account account)
         {
-            SigningCredentials credentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value)), _configuration.GetSection("Jwt:Encrypt").Value);
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt")["Key"]));
 
             var claims = new[]
             {
@@ -35,9 +37,11 @@ namespace Utilities.Tools
             };
 
             JwtSecurityToken token = new JwtSecurityToken(
+                _configuration.GetSection("Jwt")["Issuer"],
+                _configuration.GetSection("Jwt")["Audience"],
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(Convert.ToInt32(_configuration.GetSection("Jwt:Time").Value)),
-                signingCredentials: credentials
+                signingCredentials: new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
@@ -46,6 +50,15 @@ namespace Utilities.Tools
         {
             JwtSecurityToken jwtSecurityToken = new JwtSecurityToken(token);
             return jwtSecurityToken.Claims.ToList();
+        }
+
+        public bool TryRetrieveToken(HttpRequest request, out string token)
+        {
+            token = null;
+            if (string.IsNullOrEmpty(request.Headers["Authorization"].ToString())) return false;
+            var bearerToken = request.Headers["Authorization"].ToString();
+            token = bearerToken.Replace("Bearer ", "");
+            return true;
         }
 
     }
