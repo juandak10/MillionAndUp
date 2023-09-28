@@ -54,7 +54,7 @@ namespace Api.Controllers
         [HttpPost]
         [Route("Find")]
         [Authorize(Roles = "Admin,Client")]
-        public async Task<IActionResult> Find([FromBody] FindPropertyDto findPropertyRequest)
+        public async Task<IActionResult> Find([FromForm] FindPropertyDto findPropertyRequest)
         {
             var  properties = await propertyLogic.Find(findPropertyRequest);
             if (properties.Any()) return Ok(properties);
