@@ -21,7 +21,7 @@ namespace Application.Services
     //In this class all the processes associated with the accounts are managed.
     public class AccountServices: IAccountServices
     {
-        public IConfiguration configuration;
+        private readonly IConfiguration configuration;
         private readonly IAccountRepository accountRepository;
         private readonly IMessageServices messageServices;
         private readonly IPropertyRepository propertyRepository;

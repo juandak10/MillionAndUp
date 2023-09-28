@@ -353,5 +353,9 @@ namespace Application.Services
             return properties.Where(x => x.Address == property.Address && x.ZoneId == property.ZoneId && x.OwnerId == property.OwnerId && x.Year == property.Year).Any();
         }
 
+        public object Setup(Func<object, object> value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

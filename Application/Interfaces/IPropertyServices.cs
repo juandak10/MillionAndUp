@@ -26,5 +26,6 @@ namespace Application.Interfaces
 
         public BaseResponse<PropertyDto> UpdatePropertyEnable(Guid? id, bool enable);
 
+        public BaseResponse<PropertyDto> Validate(PropertySaveDto propertyInfoEntity, bool add);
     }
 }
