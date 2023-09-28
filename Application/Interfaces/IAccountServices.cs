@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Dtos;
+using Domain.Entities;
 using Domain.References;
 using System;
 using System.Collections.Generic;
@@ -15,15 +16,17 @@ namespace Application.Interfaces
 
         public Task<Account> GetForToken(string srtoken);
 
-        public Task<Account> Get(Guid? id);
+        public Task<AccountInfoDto> Get(Guid? id);
+
+        public Task<AccountDto> GetBasic(Guid? id);
 
         public Task<List<Account>> GetAll();
 
         public Task<BaseResponse<Account>> Delete(Guid? id);
 
-        public Task<BaseResponse<Account>> Insert(Account account);
+        public Task<BaseResponse<Account>> Insert(AccountDto account);
 
-        public Task<BaseResponse<Account>> Update(Account account);
+        public Task<BaseResponse<Account>> Update(AccountDto account);
 
     }
 }

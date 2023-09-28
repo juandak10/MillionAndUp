@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Domain.Dtos;
 using Domain.Entities;
 using Domain.References;
 using Microsoft.AspNetCore.Authorization;
@@ -64,7 +65,7 @@ namespace Api.Controllers
         // GET api/<AccountController>
         //Method to get all accounts
         [HttpGet]
-        [Route("Get/{id}")]
+        [Route("{id}")]
         [Authorize(Roles = "Admin,Client")]
         public async Task<IActionResult> Get(Guid? id)
         {
@@ -90,7 +91,7 @@ namespace Api.Controllers
         [HttpPost]
         [Route("Insert")]
         [Authorize(Roles = "Admin,Client")]
-        public async Task<IActionResult> Insert(Account account)
+        public async Task<IActionResult> Insert(AccountDto account)
         {
             var response = await accountServices.Insert(account);
             if (response != null && !string.IsNullOrEmpty(response.Data.Email)) return Ok(response);
@@ -102,7 +103,7 @@ namespace Api.Controllers
         [HttpPut]
         [Route("Update")]
         [Authorize(Roles = "Admin,Client")]
-        public async Task<IActionResult> Update(Account account)
+        public async Task<IActionResult> Update(AccountDto account)
         {
             var response = await accountServices.Update(account);
             if (response != null && !string.IsNullOrEmpty(response.Data.Email)) return Ok(response);

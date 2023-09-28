@@ -6,11 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using static Domain.Enums.EnumType;
 
-namespace Domain.Entities
+namespace Domain.Dtos
 {
-    public partial class Account
+    public class AccountDto
     {
-
+        [Key]
         public Guid Id { get; set; }
 
         [Required]
@@ -60,6 +60,5 @@ namespace Domain.Entities
         [Required]
         public bool Enabled { get; set; }
 
-        public virtual List<Property> Properties { get; set; }
     }
 }

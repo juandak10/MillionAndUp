@@ -15,7 +15,14 @@ namespace Persistence
 
             services
                 .AddTransient<IAccountRepository, AccountRepository>()
-                .AddTransient<IMessageRepository, MessageRepository>();
+                .AddTransient<IMessageRepository, MessageRepository>()
+                .AddTransient<ICityRepository, CityRepository>()
+                .AddTransient<ICountryRepository, CountryRepository>()
+                .AddTransient<IPropertyImageRepository, PropertyImageRepository>()
+                .AddTransient<IPropertyRepository, PropertyRepository>()
+                .AddTransient<IStateRepository, StateRepository>()
+                .AddTransient<IZoneRepository, ZoneRepository>()
+                .AddTransient<IPropertyTraceRepository, PropertyTraceRepository>();
             
             return services;
         }

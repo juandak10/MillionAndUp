@@ -1,5 +1,7 @@
 ﻿using Application.Contracts.Persistence;
 using Application.Interfaces;
+using AutoMapper;
+using Domain.Dtos;
 using Domain.Entities;
 using Domain.References;
 using Microsoft.AspNetCore.Http;
@@ -22,14 +24,19 @@ namespace Application.Services
         public IConfiguration configuration;
         private readonly IAccountRepository accountRepository;
         private readonly IMessageServices messageServices;
+        private readonly IPropertyRepository propertyRepository;
         private readonly JwtToken jwtToken;
+        private readonly IMapper mapper;
+
 
         //Controller
-        public AccountServices(IConfiguration configuration, IAccountRepository accountRepository, IMessageServices messageServices)
+        public AccountServices(IConfiguration configuration, IAccountRepository accountRepository, IMessageServices messageServices, IMapper mapper, IPropertyRepository propertyRepository)
         {
             this.accountRepository = accountRepository;
             this.messageServices = messageServices;
             this.configuration = configuration;
+            this.propertyRepository = propertyRepository;
+            this.mapper = mapper;
             jwtToken = new JwtToken(this.configuration);
         }
 
@@ -71,10 +78,24 @@ namespace Application.Services
         }
 
         //Method to get account for id
-        public async Task<Account> Get(Guid? id)
+        public async Task<AccountInfoDto> Get(Guid? id)
         {
-            Account accountEntity = new Account();
-            if (id.HasValue) accountEntity = await accountRepository.Get(id);
+            AccountInfoDto accountEntity = new AccountInfoDto();
+            if (id.HasValue) accountEntity = mapper.Map<AccountInfoDto>(await accountRepository.Get(id));
+            if (accountEntity != null)
+            {
+                var propertis = await propertyRepository.GetAll();
+                if (propertis.Any()) propertis = propertis.Where(x => x.OwnerId == accountEntity.Id).ToList();
+                if (propertis.Any()) accountEntity.Properties = propertis.Select(x => mapper.Map<AccountPropertyInfoDto>(x)).ToList();
+            }
+            return accountEntity;
+        }
+
+        //Method to get account for id
+        public async Task<AccountDto> GetBasic(Guid? id)
+        {
+            AccountDto accountEntity = new AccountDto();
+            if (id.HasValue) accountEntity = mapper.Map<AccountDto>(await accountRepository.Get(id));
             return accountEntity;
         }
 
@@ -108,11 +129,13 @@ namespace Application.Services
         }
 
         //Method to add a account
-        public async Task<BaseResponse<Account>> Insert(Account account)
+        public async Task<BaseResponse<Account>> Insert(AccountDto accountRequest)
         {
             var response = new BaseResponse<Account>();
 
-            if (account == null) return await ResponseDefault(MessageCode.Required, MessageType.Error, "Account");
+            if (accountRequest == null) return await ResponseDefault(MessageCode.Required, MessageType.Error, "Account");
+
+            var account  = mapper.Map<Account>(accountRequest);
 
             var accountEntity = await accountRepository.Insert(account);
 
@@ -123,11 +146,13 @@ namespace Application.Services
         }
 
         //Method to update a account
-        public async Task<BaseResponse<Account>> Update(Account account)
+        public async Task<BaseResponse<Account>> Update(AccountDto accountRequest)
         {
             var response = new BaseResponse<Account>();
 
-            if (account == null) return await ResponseDefault(MessageCode.Required, MessageType.Error, "Account");
+            if (accountRequest == null) return await ResponseDefault(MessageCode.Required, MessageType.Error, "Account");
+
+            var account = mapper.Map<Account>(accountRequest);
 
             var accountEntity = await accountRepository.Update(account);
 

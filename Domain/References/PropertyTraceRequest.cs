@@ -1,32 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-#nullable disable
-
-namespace Domain.Entities
+namespace Domain.References
 {
-    public partial class PropertyTrace
+    public class PropertyTraceRequest 
     {
-        public PropertyTrace()
-        {
-        }
-
-
-        public PropertyTrace(string name, DateTime? dateSale, decimal value, decimal tax, Guid? ownerOldId, Guid? ownerNewId, Guid? propertyId)
-        {
-            Name = name;
-            DateSale = dateSale;
-            Value = value;
-            Tax = tax;
-            OwnerOldId = ownerOldId;
-            OwnerNewId = ownerNewId;
-            PropertyId = propertyId;
-        }
-
-        [Key]
-        public Guid Id { get; set; }
 
         [Required]
         [DataType(DataType.DateTime)]
@@ -53,10 +32,6 @@ namespace Domain.Entities
         [Required]
 
         public Guid? PropertyId { get; set; }
-
-        public DateTime Create { get; set; }
-
-        public virtual Property Property { get; set; }
 
 
     }

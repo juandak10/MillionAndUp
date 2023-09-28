@@ -1,31 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace Domain.Entities
+namespace Domain.Dtos
 {
-    public partial class PropertyTrace
+    public class PropertyTraceDto
     {
-        public PropertyTrace()
-        {
-        }
-
-
-        public PropertyTrace(string name, DateTime? dateSale, decimal value, decimal tax, Guid? ownerOldId, Guid? ownerNewId, Guid? propertyId)
-        {
-            Name = name;
-            DateSale = dateSale;
-            Value = value;
-            Tax = tax;
-            OwnerOldId = ownerOldId;
-            OwnerNewId = ownerNewId;
-            PropertyId = propertyId;
-        }
-
-        [Key]
         public Guid Id { get; set; }
 
         [Required]
@@ -47,17 +30,17 @@ namespace Domain.Entities
 
         [Required]
         public Guid? OwnerNewId { get; set; }
+        public string NameOwnerNew { get; set; }
 
         [Required]
         public Guid? OwnerOldId { get; set; }
         [Required]
 
+        public string NameOwnerOld { get; set; }
+
         public Guid? PropertyId { get; set; }
 
         public DateTime Create { get; set; }
-
-        public virtual Property Property { get; set; }
-
 
     }
 }

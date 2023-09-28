@@ -8,6 +8,17 @@ namespace Domain.Entities
 {
     public partial class PropertyImage
     {
+        public PropertyImage()
+        {
+        }
+
+        public PropertyImage(string urlImage, Guid? guid)
+        {
+            this.Url = urlImage;
+            this.PropertyId = guid;
+            this.Enabled = true;
+        }
+
         [Key]
         public Guid Id { get; set; }
 

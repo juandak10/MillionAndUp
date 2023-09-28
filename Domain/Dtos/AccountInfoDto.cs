@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,11 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using static Domain.Enums.EnumType;
 
-namespace Domain.Entities
+namespace Domain.Dtos
 {
-    public partial class Account
+    public class AccountInfoDto
     {
-
+        [Key]
         public Guid Id { get; set; }
 
         [Required]
@@ -60,6 +61,12 @@ namespace Domain.Entities
         [Required]
         public bool Enabled { get; set; }
 
-        public virtual List<Property> Properties { get; set; }
+        public virtual List<AccountPropertyInfoDto> Properties { get; set; }
+
     }
+
+
+
+
+
 }
