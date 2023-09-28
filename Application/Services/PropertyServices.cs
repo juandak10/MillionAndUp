@@ -37,6 +37,7 @@ namespace Application.Services
             this.propertyTraceLogic = propertyTraceLogic;
             this.propertyRepository = propertyRepository;
             this.messageServices = messageServices;
+            this.config = config;
 
         }
 
@@ -68,14 +69,28 @@ namespace Application.Services
 
                 if (property != null)
                 {
-                    if (property.IdOwner.HasValue) property.Owner = await accountLogic.GetBasic(property.IdOwner);
-                    if (property.IdZone.HasValue) property.Zone = await zoneLogic.GetInfo(property.IdZone);
+                    if (property.OwnerId.HasValue) property.Owner = await accountLogic.GetBasic(property.OwnerId);
+                    if (property.ZoneId.HasValue) property.Zone = await zoneLogic.GetInfo(property.ZoneId);
 
                     property.PropertyImages = await propertyImageLogic.GetAllForProperty(property.Id);
                     property.PropertyTraces = await propertyTraceLogic.GetAllForProperty(property.Id);
 
                     property = Arrive(property);
                 }
+            }
+
+            return property;
+        }
+
+
+        //Method to get a specific property,with detailed information
+        public PropertyDto GetNotAsync(Guid? id)
+        {
+            var property = new PropertyDto();
+
+            if (id.HasValue)
+            {
+                property = mapper.Map<PropertyDto>( propertyRepository.GetNotAsync(id));
             }
 
             return property;
@@ -116,12 +131,27 @@ namespace Application.Services
             return propertyEntities;
         }
 
+        //Method to get all system properties
+        public List<PropertyDto> GetAllNotAsync()
+        {
+            var propertyEntities = new List<PropertyDto>();
+
+            var properties = propertyRepository.GetAllNotAsync();
+            if (properties.Any())
+            {
+                propertyEntities = properties.Select(x => mapper.Map<PropertyDto>(x)).ToList();
+                if (propertyEntities.Any()) propertyEntities.ForEach(x => Arrive(x));
+            }
+
+            return propertyEntities;
+        }
+
         //Method to add a new property
-        public async Task<BaseResponse<PropertyDto>> Insert(PropertyDto propertyInfoEntity)
+        public BaseResponse<PropertyDto> Insert(PropertySaveDto propertyInfoEntity)
         {
             BaseResponse<PropertyDto> response = new BaseResponse<PropertyDto>();
 
-            response = await Validate(propertyInfoEntity, true);
+            response = Validate(propertyInfoEntity, true);
             if (response.MessageCode > 0) return response;
 
             var property = propertyRepository.Insert(mapper.Map<Property>(propertyInfoEntity));
@@ -135,15 +165,15 @@ namespace Application.Services
         }
 
         //Method to delete a property
-        public async Task<BaseResponse<PropertyDto>> Delete(Guid? id)
+        public BaseResponse<PropertyDto> Delete(Guid? id)
         {
             BaseResponse<PropertyDto> response = new BaseResponse<PropertyDto>();
 
             if (!id.HasValue) return MessageResponse(MessageCode.Required, MessageType.Error, "Property");
-            var exitsproperty = await Get(id);
+            var exitsproperty = GetNotAsync(id);
             if (exitsproperty == null) return MessageResponse(MessageCode.DoesNotexist, MessageType.Error, "Property");
 
-            var property = await propertyRepository.Delete(id);
+            var property = propertyRepository.Delete(id);
 
             if (property == null) return MessageResponse(MessageCode.TransactionNotProcessed, MessageType.Error);
 
@@ -154,14 +184,14 @@ namespace Application.Services
         }
 
         //Method to update a property
-        public async Task<BaseResponse<PropertyDto>> Update(PropertyDto propertyInfoEntity)
+        public BaseResponse<PropertyDto> Update(PropertySaveDto propertyInfoEntity)
         {
             BaseResponse<PropertyDto> response = new BaseResponse<PropertyDto>();
 
-            response = await Validate(propertyInfoEntity, false);
+            response = Validate(propertyInfoEntity, false);
             if (response.MessageCode > 0) return response;
 
-            var property = await propertyRepository.Update(mapper.Map<Property>(propertyInfoEntity));
+            var property = propertyRepository.Update(mapper.Map<Property>(propertyInfoEntity));
 
             if (property == null) return MessageResponse(MessageCode.TransactionNotProcessed, MessageType.Error);
 
@@ -177,7 +207,7 @@ namespace Application.Services
             BaseResponse<PropertyDto> response = new BaseResponse<PropertyDto>();
 
             if (!id.HasValue) return MessageResponse(MessageCode.Required, MessageType.Error, "Property");
-            var exitsproperty = Get(id);
+            var exitsproperty = GetNotAsync(id);
             if (exitsproperty == null) return MessageResponse(MessageCode.DoesNotexist, MessageType.Error, "Property");
 
             if (price < 0) return MessageResponse(MessageCode.DoesNotexist, MessageType.Error, "Price");
@@ -198,7 +228,7 @@ namespace Application.Services
             BaseResponse<PropertyDto> response = new BaseResponse<PropertyDto>();
 
             if (!id.HasValue) return MessageResponse(MessageCode.Required, MessageType.Error, "Property");
-            var exitsproperty = Get(id);
+            var exitsproperty = GetNotAsync(id);
             if (exitsproperty == null) return MessageResponse(MessageCode.DoesNotexist, MessageType.Error, "Property");
 
             var property = propertyRepository.UpdateEnable(id, enable);
@@ -212,25 +242,25 @@ namespace Application.Services
         }
 
         //Method to Validate property
-        public async Task<BaseResponse<PropertyDto>> Validate(PropertyDto propertyInfoEntity, bool add)
+        public BaseResponse<PropertyDto> Validate(PropertySaveDto propertyInfoEntity, bool add)
         {
-            if (!propertyInfoEntity.IdZone.HasValue) return MessageResponse(MessageCode.Required, MessageType.Error, "Zone");
-            var zone = await zoneLogic.Get(propertyInfoEntity.IdZone);
+            if (propertyInfoEntity.ZoneId == null) return MessageResponse(MessageCode.Required, MessageType.Error, "Zone");
+            var zone = zoneLogic.GetNotAsync(propertyInfoEntity.ZoneId);
             if (zone == null) return MessageResponse(MessageCode.DoesNotexist, MessageType.Error, "Zone");
 
-            if (!propertyInfoEntity.IdOwner.HasValue) return MessageResponse(MessageCode.Required, MessageType.Error, "Zone");
-            var owner = await accountLogic.Get(propertyInfoEntity.IdOwner);
+            if (propertyInfoEntity.OwnerId == null) return MessageResponse(MessageCode.Required, MessageType.Error, "Zone");
+            var owner = accountLogic.GetNotAsync(propertyInfoEntity.OwnerId);
             if (owner == null) return MessageResponse(MessageCode.DoesNotexist, MessageType.Error, "Owner");
 
             if (add)
             {
-                var exitsproperty = await BuyProperty(propertyInfoEntity);
+                var exitsproperty = BuyProperty(propertyInfoEntity);
                 if (exitsproperty) return MessageResponse(MessageCode.Exists, MessageType.Error, "Property");
             }
             else
             {
-                if (!propertyInfoEntity.Id.HasValue) return MessageResponse(MessageCode.Required, MessageType.Error, "Property");
-                var exitsproperty = await Get(propertyInfoEntity.Id);
+                if (propertyInfoEntity.Id == null) return MessageResponse(MessageCode.Required, MessageType.Error, "Property");
+                var exitsproperty = GetNotAsync(propertyInfoEntity.Id);
                 if (exitsproperty == null) return MessageResponse(MessageCode.DoesNotexist, MessageType.Error, "Property");
 
             }
@@ -255,7 +285,7 @@ namespace Application.Services
         {
             if (find != null && properties.Any())
             {
-                if (!string.IsNullOrEmpty(find.IdZone.ToString())) properties = properties.Where(x => x.IdZone == find.IdZone).ToList();
+                if (!string.IsNullOrEmpty(find.IdZone.ToString()) && find.IdZone.ToString() != "00000000-0000-0000-0000-000000000000") properties = properties.Where(x => x.ZoneId == find.IdZone).ToList();
                 if (find.YearMin > 0 && find.YearMax > find.YearMin) properties = properties.Where(x => x.Year >= find.YearMin && x.Year <= find.YearMax).ToList();
                 if (find.PriceMin > 0 && find.PriceMax > find.PriceMin) properties = properties.Where(x => x.Price >= find.PriceMin && x.Price <= find.PriceMax).ToList();
                 if (find.RoomsMin > 0 && find.RoomsMax > find.RoomsMin) properties = properties.Where(x => x.Rooms >= find.RoomsMin && x.Rooms <= find.RoomsMax).ToList();
@@ -292,13 +322,13 @@ namespace Application.Services
         {
             if (properties.Any())
             {
-                properties.ForEach(async x => {
+                foreach (var x in properties) { 
                     x.ImageUrl = await propertyImageLogic.GetFirstForProperty(x.Id);
                     x.Type = x.PropertyType.ToString();
                     x.Condition = x.ConditionType.ToString();
                     x.Security = x.SecurityType.ToString();
                     x.Area = x.AreaType.ToString();
-                });
+                }
             }
             return properties;
         }
@@ -317,10 +347,10 @@ namespace Application.Services
         }
 
         //Method to buy property with existing
-        private async Task<bool> BuyProperty(PropertyDto property)
+        private bool BuyProperty(PropertySaveDto property)
         {
-            var properties = await GetAll();
-            return properties.Where(x => x.Address == property.Address && x.IdZone == property.IdZone && x.IdOwner == property.IdOwner && x.Year == property.Year).Any();
+            var properties = GetAllNotAsync();
+            return properties.Where(x => x.Address == property.Address && x.ZoneId == property.ZoneId && x.OwnerId == property.OwnerId && x.Year == property.Year).Any();
         }
 
     }

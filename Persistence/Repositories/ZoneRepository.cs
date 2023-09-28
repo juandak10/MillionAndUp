@@ -30,6 +30,12 @@ namespace Persistence.Repositories
             return await millionAndUpContext.Zones.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
+        //Get property from database
+        public Zone GetNotAsync(Guid? id)
+        {
+            return millionAndUpContext.Zones.Where(x => x.Id == id).FirstOrDefault();
+        }
+
         //Get all zones from database
         public async Task<List<Zone>> GetAll()
         {

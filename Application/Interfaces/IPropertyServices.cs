@@ -16,17 +16,15 @@ namespace Application.Interfaces
 
         public Task<List<PropertyBasicDto>> GetAllForCity(Guid? idCity);
 
-        public Task<List<PropertyDto>> GetAll();
+        public BaseResponse<PropertyDto> Insert(PropertySaveDto propertyInfoEntity);
 
-        public Task<BaseResponse<PropertyDto>> Insert(PropertyDto propertyInfoEntity);
+        public BaseResponse<PropertyDto> Delete(Guid? id);
 
-        public Task<BaseResponse<PropertyDto>> Delete(Guid? id);
-
-        public Task<BaseResponse<PropertyDto>> Update(PropertyDto propertyInfoEntity);
+        public BaseResponse<PropertyDto> Update(PropertySaveDto propertyInfoEntity);
 
         public BaseResponse<PropertyDto> UpdatePropertyPrice(Guid? id, decimal price);
+
         public BaseResponse<PropertyDto> UpdatePropertyEnable(Guid? id, bool enable);
 
-        public Task<BaseResponse<PropertyDto>> Validate(PropertyDto propertyInfoEntity, bool add);
     }
 }

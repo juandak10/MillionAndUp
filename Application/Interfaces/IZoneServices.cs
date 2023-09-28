@@ -18,5 +18,7 @@ namespace Application.Interfaces
 
         public Task<ZoneInfoDto> Get(Guid? id);
 
+        public ZoneInfoDto GetNotAsync(Guid? id);
+
     }
 }

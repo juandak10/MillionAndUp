@@ -4,12 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WeeloCore.Entities;
 using static Domain.Enums.EnumType;
 
 namespace Domain.Dtos
 {
-    public class PropertyDto : IValidatableObject
+    public class PropertySaveDto : IValidatableObject
     {
         public Guid? Id { get; set; }
         [Required]
@@ -31,8 +30,6 @@ namespace Domain.Dtos
         [Required]
         [Range(-180, 180)]
         public double Longitude { get; set; }
-
-        public int CodeInternal { get; set; }
 
         [Required]
         [Range(1900, 3000)]
@@ -113,10 +110,6 @@ namespace Domain.Dtos
 
         public Guid? ZoneId { get; set; }
         public Guid? OwnerId { get; set; }
-        public virtual AccountDto Owner { get; set; }
-        public virtual PropertyZoneInfo Zone { get; set; }
-        public virtual List<PropertyImageBasicDto> PropertyImages { get; set; }
-        public virtual List<PropertyTraceDto> PropertyTraces { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -143,6 +136,7 @@ namespace Domain.Dtos
             if (Levels <= 0) yield return new ValidationResult(MessageCode.Required.ToString(), new[] { nameof(Levels) });
 
         }
+
 
     }
 }

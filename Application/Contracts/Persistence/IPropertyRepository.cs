@@ -9,19 +9,23 @@ namespace Application.Contracts.Persistence
 {
     public interface IPropertyRepository
     {
-        public Task<Property> Delete(Guid? id);
+        public Property Delete(Guid? id);
 
         public Task<Property> Get(Guid? id);
 
+        public Property GetNotAsync(Guid? id);
+
         public Task<List<Property>> GetAll();
+
+        public List<Property> GetAllNotAsync();
 
         public Property Insert(Property @object);
 
-        public Task<Property> Update(Property @object);
+        public Property Update(Property @object);
 
-        public Task<Property> UpdatePrice(Guid? id, decimal price);
+        public Property UpdatePrice(Guid? id, decimal price);
 
-        public Task<Property> UpdateEnable(Guid? id, bool enable);
+        public Property UpdateEnable(Guid? id, bool enable);
 
         public Task<List<Property>> GetAllForZones(List<Guid> isZones);
 

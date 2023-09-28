@@ -27,16 +27,18 @@ namespace Api.Controllers
             this.propertyLogic = propertyLogic;
         }
 
-        // GET api/<PropertyController>
-        //Method to get all system properties
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAll()
+        // POST api/<PropertyController>/Find
+        //Method to search for properties by city, area, price, year, room number among other filters
+        [HttpPost]
+        [Route("Find")]
+        [Authorize(Roles = "Admin,Client")]
+        public async Task<IActionResult> Find(FindPropertyDto findPropertyRequest)
         {
-            var  properties = await propertyLogic.GetAll();
+            var  properties = await propertyLogic.Find(findPropertyRequest);
             if (properties.Any()) return Ok(properties);
             return NotFound(properties);
         }
+
 
         // GET api/<PropertyController>/c9f60fd2-1a6a-415c-9fc2-10fb73d62b46
         //Method to get a specific property,with detailed information
@@ -49,25 +51,13 @@ namespace Api.Controllers
             return NotFound(property);
         }
 
-        // POST api/<PropertyController>/Find
-        //Method to search for properties by city, area, price, year, room number among other filters
-        [HttpPost]
-        [Route("Find")]
-        [Authorize(Roles = "Admin,Client")]
-        public async Task<IActionResult> Find([FromForm] FindPropertyDto findPropertyRequest)
-        {
-            var  properties = await propertyLogic.Find(findPropertyRequest);
-            if (properties.Any()) return Ok(properties);
-            return NotFound(properties);
-        }
-
         // POST api/<PropertyController>
         //Method to add a new property
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Post([FromBody] PropertyDto propertyRequest)
+        public ActionResult Post([FromBody] PropertySaveDto propertyRequest)
         {
-            var response = await propertyLogic.Insert(propertyRequest);
+            var response = propertyLogic.Insert(propertyRequest);
             if (response != null) return Ok(response);
             return BadRequest(response);
         }
@@ -76,9 +66,9 @@ namespace Api.Controllers
         //Method to update a property
         [HttpPut()]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Put(int id, [FromBody] PropertyDto propertyRequest)
+        public IActionResult Put([FromBody] PropertySaveDto propertyRequest)
         {
-            var response = await propertyLogic.Update(propertyRequest);
+            var response =  propertyLogic.Update(propertyRequest);
             if (response != null) return Ok(response);
             return BadRequest(response);
         }
@@ -87,9 +77,9 @@ namespace Api.Controllers
         //Method to delete a property
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(Guid? id)
+        public IActionResult Delete(Guid? id)
         {
-            var response = await propertyLogic.Delete(id);
+            var response = propertyLogic.Delete(id);
             if (response != null) return Ok(response);
             return BadRequest(response);
         }
@@ -118,17 +108,6 @@ namespace Api.Controllers
             return BadRequest(response);
         }
 
-        // Get api/<PropertyController>
-        //Method to validate a property exists to be  add, update or delete
-        [HttpPost()]
-        [Authorize(Roles = "Admin")]
-        [Route("Validate")]
-        public async Task<IActionResult> Validate([FromBody] PropertyDto propertyRequest,bool add)
-        {
-            var response = await propertyLogic.Validate(propertyRequest,add);
-            if (response != null) return Ok(response);
-            return BadRequest(response);
-        }
 
     }
 }

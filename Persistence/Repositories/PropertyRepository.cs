@@ -9,6 +9,8 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
 namespace Persistence.Repositories
 {
     //This class is a repository that connects us to the database
@@ -23,7 +25,7 @@ namespace Persistence.Repositories
         }
 
         //Delete property from database
-        public  async Task<Property> Delete(Guid? id)
+        public Property Delete(Guid? id)
         {
             var property = new Property();
             using (var dbContextTransaction = millionAndUpContext.Database.BeginTransaction())
@@ -31,7 +33,7 @@ namespace Persistence.Repositories
 
                 try
                 {
-                    property = await Get(id);
+                    property = GetNotAsync(id);
 
                     var images = millionAndUpContext.PropertyImages.Where(x => x.PropertyId == property.Id).ToList();
                     images.ForEach(x=> millionAndUpContext.PropertyImages.Remove(x));
@@ -60,10 +62,22 @@ namespace Persistence.Repositories
             return await millionAndUpContext.Properties.Where(x=> x.Id == id).FirstOrDefaultAsync();
         }
 
+        //Get property from database
+        public Property GetNotAsync(Guid? id)
+        {
+            return millionAndUpContext.Properties.Where(x => x.Id == id).FirstOrDefault();
+        }
+
         //Get all properties from database
         public async Task<List<Property>> GetAll()
         {
             return await millionAndUpContext.Properties.ToListAsync();
+        }
+
+        //Get all properties from database
+        public List<Property> GetAllNotAsync()
+        {
+            return  millionAndUpContext.Properties.ToList();
         }
 
         //Add property from database
@@ -72,15 +86,16 @@ namespace Persistence.Repositories
             var date = DateTime.Now;
             @object.Create = date;
             @object.Update = date;
+            @object.Id = Guid.NewGuid();
             var property = millionAndUpContext.Properties.Add(@object).Entity;
             millionAndUpContext.SaveChanges();
             return property;
         }
 
         //Update property from database
-        public  async Task<Property> Update(Property @object)
+        public  Property Update(Property @object)
         {
-            var property = await  Get(@object.Id);
+            var property = GetNotAsync(@object.Id);
             property.Update = DateTime.Now;
             property.Address = @object.Address;
             property.AreaType = @object.AreaType;
@@ -110,9 +125,9 @@ namespace Persistence.Repositories
         }
 
         //Update price of property from database
-        public async Task<Property> UpdatePrice(Guid? id, decimal price)
+        public Property UpdatePrice(Guid? id, decimal price)
         {
-            var property = await Get(id);
+            var property = GetNotAsync(id);
             property.Update = DateTime.Now;
             property.Price = price;
             millionAndUpContext.SaveChanges();
@@ -120,9 +135,9 @@ namespace Persistence.Repositories
         }
 
         //Update property from database
-        public async Task<Property> UpdateEnable(Guid? id, bool enable)
+        public Property UpdateEnable(Guid? id, bool enable)
         {
-            var property = await Get(id);
+            var property = GetNotAsync(id);
             property.Update = DateTime.Now;
             property.Enabled = enable;
             millionAndUpContext.SaveChanges();

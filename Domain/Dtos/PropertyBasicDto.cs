@@ -11,8 +11,8 @@ namespace Domain.Dtos
     public class PropertyBasicDto
     {
         public Guid Id { get; set; }
-        public Guid IdZone { get; set; }
-        public Guid IdOwner { get; set; }
+        public Guid ZoneId { get; set; }
+        public Guid OwnerId { get; set; }
         public int CodeInternal { get; set; }
 
         [Required]

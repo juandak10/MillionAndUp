@@ -40,6 +40,7 @@ namespace Utilities.Tools
             CreateMap<Property, PropertyBasicDto>();
             CreateMap<PropertyBasicDto, Property>();
             CreateMap<Property, PropertyDto>();
+            CreateMap <PropertySaveDto,Property>();
 
         }
     }

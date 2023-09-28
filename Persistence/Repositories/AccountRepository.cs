@@ -40,6 +40,11 @@ namespace Persistence.Repositories
             return await millionAndUpContext.Accounts.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
+        public Account GetNotAsync(Guid? id)
+        {
+            return millionAndUpContext.Accounts.Where(x => x.Id == id).FirstOrDefault();
+        }
+
         //Get all accounts from database
         public async Task<List<Account>> GetAll()
         {

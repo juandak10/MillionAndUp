@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using static Domain.Enums.EnumType;
 
 namespace Domain.References
 {
-    public class PropertyTraceRequest 
+    public class PropertyTraceRequest : IValidatableObject
     {
 
         [Required]
@@ -33,6 +35,16 @@ namespace Domain.References
 
         public Guid? PropertyId { get; set; }
 
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!OwnerNewId.HasValue) yield return new ValidationResult(MessageCode.Required.ToString(), new[] { nameof(OwnerNewId) });
+            if (!OwnerOldId.HasValue) yield return new ValidationResult(MessageCode.Required.ToString(), new[] { nameof(OwnerOldId) });
+            if (!PropertyId.HasValue) yield return new ValidationResult(MessageCode.Required.ToString(), new[] { nameof(PropertyId) });
+            if (!DateSale.HasValue) yield return new ValidationResult(MessageCode.Required.ToString(), new[] { nameof(DateSale) });
+            if (string.IsNullOrEmpty(Name)) yield return new ValidationResult(MessageCode.Required.ToString(), new[] { nameof(Name) });
+            if (Value < 0) yield return new ValidationResult(MessageCode.Required.ToString(), new[] { nameof(Value) });
+            if (Tax < 0) yield return new ValidationResult(MessageCode.Required.ToString(), new[] { nameof(Tax) });
+        }
 
     }
 }

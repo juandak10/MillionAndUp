@@ -10,6 +10,6 @@ namespace Application.Contracts.Persistence
 {
     public interface IMessageRepository
     {
-        public Task<List<Message>> GetAll();
+        public List<Message> GetAll();
     }
 }

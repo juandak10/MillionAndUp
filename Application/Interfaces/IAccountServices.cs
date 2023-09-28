@@ -18,6 +18,8 @@ namespace Application.Interfaces
 
         public Task<AccountInfoDto> Get(Guid? id);
 
+        public AccountInfoDto GetNotAsync(Guid? id);
+
         public Task<AccountDto> GetBasic(Guid? id);
 
         public Task<List<Account>> GetAll();

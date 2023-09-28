@@ -14,11 +14,11 @@ namespace Application.Services
         }
 
         //Method to get success or error messages from database
-        public async Task<string> GetMessage(MessageCode messageCode, MessageType messageType)
+        public string GetMessage(MessageCode messageCode, MessageType messageType)
         {
             var message = string.Empty;
 
-            var result = await messageRepository.GetAll();
+            var result = messageRepository.GetAll();
 
             if (result != null && result.Any())
             {

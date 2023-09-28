@@ -91,6 +91,16 @@ namespace Application.Services
             return accountEntity;
         }
 
+
+        //Method to get account for id
+        public AccountInfoDto GetNotAsync(Guid? id)
+        {
+            AccountInfoDto accountEntity = new AccountInfoDto();
+            if (id.HasValue) accountEntity = mapper.Map<AccountInfoDto>(accountRepository.GetNotAsync(id));
+            return accountEntity;
+        }
+
+
         //Method to get account for id
         public async Task<AccountDto> GetBasic(Guid? id)
         {
@@ -135,6 +145,8 @@ namespace Application.Services
 
             if (accountRequest == null) return await ResponseDefault(MessageCode.Required, MessageType.Error, "Account");
 
+            if(GetNotAsync(accountRequest.Id) != null) return await ResponseDefault(MessageCode.Exists, MessageType.Error, "Account");
+
             var account  = mapper.Map<Account>(accountRequest);
 
             var accountEntity = await accountRepository.Insert(account);
@@ -151,6 +163,8 @@ namespace Application.Services
             var response = new BaseResponse<Account>();
 
             if (accountRequest == null) return await ResponseDefault(MessageCode.Required, MessageType.Error, "Account");
+
+            if (GetNotAsync(accountRequest.Id) == null) return await ResponseDefault(MessageCode.DoesNotexist, MessageType.Error, "Account");
 
             var account = mapper.Map<Account>(accountRequest);
 
@@ -200,7 +214,7 @@ namespace Application.Services
         {
             BaseResponse<Account> response = new BaseResponse<Account>();
             response.MessageCode = messageCode;
-            response.Message = String.Format("{0} {1}",await messageServices.GetMessage(messageCode, messageType), additionalMessage);
+            response.Message = String.Format("{0} {1}", messageServices.GetMessage(messageCode, messageType), additionalMessage);
             response.MessageType = messageType;
             return response;
         }

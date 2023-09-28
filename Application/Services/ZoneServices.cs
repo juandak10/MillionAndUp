@@ -99,5 +99,13 @@ namespace Application.Services
         }
 
 
+        //Method to get a zone
+        public ZoneInfoDto GetNotAsync(Guid? id)
+        {
+            ZoneInfoDto zoneInfo = new ZoneInfoDto();
+            if (id.HasValue) zoneInfo = mapper.Map<ZoneInfoDto>(zoneRepository.GetNotAsync(id));
+            return zoneInfo;
+        }
+
     }
 }

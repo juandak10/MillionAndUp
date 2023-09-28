@@ -11,6 +11,8 @@ namespace Application.Contracts.Persistence
     {
         public Task<Zone> Get(Guid? id);
 
+        public Zone GetNotAsync(Guid? id);
+
         public Task<List<Zone>> GetAll();
 
         public Task<List<Zone>> GetAllForCity(Guid? idCity);

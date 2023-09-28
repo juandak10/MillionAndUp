@@ -14,6 +14,8 @@ namespace Application.Contracts.Persistence
 
         public Task<Account> Get(Guid? id);
 
+        public Account GetNotAsync(Guid? id);
+
         public Task<List<Account>> GetAll();
 
         public Task<Account> Insert(Account account);

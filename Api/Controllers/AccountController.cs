@@ -70,7 +70,7 @@ namespace Api.Controllers
         public async Task<IActionResult> Get(Guid? id)
         {
             var account = await accountServices.Get(id);
-            if (account != null && !string.IsNullOrEmpty(account.Email)) return Ok(account);
+            if (account != null) return Ok(account);
             return NotFound(null);
         }
 
@@ -82,7 +82,7 @@ namespace Api.Controllers
         public async Task<IActionResult> Delete(Guid? id)
         {
             var response = await accountServices.Delete(id);
-            if (response != null && !string.IsNullOrEmpty(response.Data.Email)) return Ok(response);
+            if (response != null) return Ok(response);
             return BadRequest(response);
         }
 
@@ -94,7 +94,7 @@ namespace Api.Controllers
         public async Task<IActionResult> Insert(AccountDto account)
         {
             var response = await accountServices.Insert(account);
-            if (response != null && !string.IsNullOrEmpty(response.Data.Email)) return Ok(response);
+            if (response != null) return Ok(response);
             return BadRequest(response);
         }
 
@@ -106,7 +106,7 @@ namespace Api.Controllers
         public async Task<IActionResult> Update(AccountDto account)
         {
             var response = await accountServices.Update(account);
-            if (response != null && !string.IsNullOrEmpty(response.Data.Email)) return Ok(response);
+            if (response != null) return Ok(response);
             return BadRequest(response);
         }
 
