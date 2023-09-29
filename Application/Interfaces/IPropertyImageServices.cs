@@ -20,7 +20,7 @@ namespace Application.Interfaces
 
         public Task<string> GetFirstForProperty(Guid? idProperty);
 
-        public Task<BaseResponse<PropertyImage>> UpdatePropertyImageEnable(Guid? id, bool enable);
+        public BaseResponse<PropertyImage> UpdatePropertyImageEnable(Guid? id, bool enable);
 
 
     }

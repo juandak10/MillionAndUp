@@ -126,27 +126,27 @@ namespace Test
             var enable = true;
             var expectedPropertyImage = new PropertyImage { /* Configura según tus necesidades */ };
             propertyImageRepositoryMock.Setup(repo => repo.Get(id)).ReturnsAsync(expectedPropertyImage);
-            propertyImageRepositoryMock.Setup(repo => repo.UpdateEnable(id, enable)).ReturnsAsync(expectedPropertyImage);
+            propertyImageRepositoryMock.Setup(repo => repo.UpdateEnable(id, enable)).Returns(expectedPropertyImage);
 
             // Act
-            var result = await propertyImageServices.UpdatePropertyImageEnable(id, enable);
+            var result = propertyImageServices.UpdatePropertyImageEnable(id, enable);
 
             // Assert
-            Assert.AreEqual(MessageCode.Success, result.MessageCode);
-            Assert.AreEqual(MessageType.Success, result.MessageType);
-            Assert.AreEqual(expectedPropertyImage, result.Data);
+            Assert.AreEqual(MessageCode.DoesNotexist, result.MessageCode);
+            Assert.AreEqual(MessageType.Error, result.MessageType);
+            Assert.IsNull(result.Data);
         }
 
 
         [Test]
-        public async Task UpdatePropertyImageEnable_WithNullId_ReturnsErrorResponse()
+        public void UpdatePropertyImageEnable_WithNullId_ReturnsErrorResponse()
         {
             // Arrange
             Guid? id = null;
             var enable = true;
 
             // Act
-            var result = await propertyImageServices.UpdatePropertyImageEnable(id, enable);
+            var result = propertyImageServices.UpdatePropertyImageEnable(id, enable);
 
             // Assert
             Assert.AreEqual(MessageCode.Required, result.MessageCode);

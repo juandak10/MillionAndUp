@@ -29,6 +29,12 @@ namespace Persistence.Repositories
             return  await millionAndUpContext.PropertyImages.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
+        //Get image of property from database
+        public PropertyImage GetNotAsync(Guid? id)
+        {
+            return millionAndUpContext.PropertyImages.Where(x => x.Id == id).FirstOrDefault();
+        }
+
         //Add image of property from database
         public  PropertyImage Insert(PropertyImage @object)
         {
@@ -39,9 +45,9 @@ namespace Persistence.Repositories
 
 
         //Update enable a image of property from database
-        public async Task<PropertyImage> UpdateEnable(Guid? id, bool enable)
+        public PropertyImage UpdateEnable(Guid? id, bool enable)
         {
-            var propertyImage = await Get(id);
+            var propertyImage = GetNotAsync(id);
             propertyImage.Enabled = enable;
             millionAndUpContext.SaveChanges();
             return propertyImage;

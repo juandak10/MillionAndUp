@@ -11,9 +11,11 @@ namespace Application.Contracts.Persistence
     {
         public Task<PropertyImage> Get(Guid? id);
 
+        public PropertyImage GetNotAsync(Guid? id);
+
         public PropertyImage Insert(PropertyImage @object);
 
-        public Task<PropertyImage> UpdateEnable(Guid? id, bool enable);
+        public PropertyImage UpdateEnable(Guid? id, bool enable);
 
         public Task<PropertyImage> GetFirstForIdProperty(Guid? idProperty);
 

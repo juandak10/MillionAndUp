@@ -53,6 +53,18 @@ namespace Application.Services
             return property;
         }
 
+        //Method to get a specific image of property
+        public PropertyImage GetNotAsync(Guid? id)
+        {
+            var property = new PropertyImage();
+
+            if (id.HasValue)
+            {
+                property = propertyImageRepository.GetNotAsync(id);
+            }
+            return property;
+        }
+
 
         //Method to create new image of property
         public BaseResponse<PropertyImage> New(NewImageRequest newImageRequest)
@@ -104,12 +116,12 @@ namespace Application.Services
         }
 
         //Method to update enable image of property
-        public async Task<BaseResponse<PropertyImage>> UpdatePropertyImageEnable(Guid? id, bool enable)
+        public BaseResponse<PropertyImage> UpdatePropertyImageEnable(Guid? id, bool enable)
         {
             BaseResponse<PropertyImage> response = new BaseResponse<PropertyImage>();
 
             if (!id.HasValue) return MessageResponse(MessageCode.Required, MessageType.Error, "Image");
-            var exitspropertyImage = await propertyImageRepository.Get(id);
+            var exitspropertyImage = propertyImageRepository.GetNotAsync(id);
             if (exitspropertyImage == null) return MessageResponse(MessageCode.DoesNotexist, MessageType.Error, "Image");
 
             var property = propertyImageRepository.UpdateEnable(id, enable);
@@ -117,7 +129,7 @@ namespace Application.Services
             if (property == null) return MessageResponse(MessageCode.TransactionNotProcessed, MessageType.Error);
 
             response = MessageResponse(MessageCode.Success, MessageType.Success, "Image");
-            response.Data = await property;
+            response.Data = property;
 
             return response;
         }

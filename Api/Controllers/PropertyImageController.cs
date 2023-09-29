@@ -66,9 +66,9 @@ namespace Api.Controllers
         [HttpPatch()]
         [Route("Enable")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Enable(Guid? id, bool enable)
+        public IActionResult Enable(Guid? id, bool enable)
         {
-            var response = await propertyImageLogic.UpdatePropertyImageEnable(id, enable);
+            var response = propertyImageLogic.UpdatePropertyImageEnable(id, enable);
             if (response != null) return Ok(response);
             return BadRequest(response);
         }
