@@ -1,0 +1,1101 @@
+{
+	"info": {
+		"_postman_id": "0f2fc764-b4ef-476d-857e-c1f3989a1b18",
+		"name": "Million And Up",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15253772"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"if (jsonData && jsonData.token) {    \r",
+									"    pm.environment.set(\"Token\", jsonData.token);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"jadesignature@gmail.com\",\r\n  \"password\": \"June123+\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Url}}Account/Login",
+							"host": [
+								"{{Url}}Account"
+							],
+							"path": [
+								"Login"
+							]
+						},
+						"description": "Login"
+					},
+					"response": []
+				},
+				{
+					"name": "Logged",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}Account/Logged",
+							"host": [
+								"{{Url}}Account"
+							],
+							"path": [
+								"Logged"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"if (jsonData &&  jsonData.length > 0 && jsonData[0].id) {    \r",
+									"    pm.environment.set(\"Account\", jsonData[0].id);\r",
+									"}\r",
+									"\r",
+									"if (jsonData &&  jsonData.length > 0 && jsonData[1].id) {    \r",
+									"    pm.environment.set(\"Account2\", jsonData[1].id);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}Account/GetAll",
+							"host": [
+								"{{Url}}Account"
+							],
+							"path": [
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}Account/{{Account}}",
+							"host": [
+								"{{Url}}Account"
+							],
+							"path": [
+								"{{Account}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"if (jsonData && jsonData.data && jsonData.data.id) {    \r",
+									"    pm.environment.set(\"AccountNew\", jsonData.data.id);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"00000000-0000-0000-0000-000000000000\",\r\n    \"name\": \"Alejo Velez\",\r\n    \"address\": \"8098-8000 Collins Ave, Miami Beach, FL 33141, EE. UU.\",\r\n    \"phone\": \"7863503856\",\r\n    \"email\": \"alejo@gmail.com\",\r\n    \"password\": \"October31*\",\r\n    \"photoUrl\": \"https://firebasestorage.googleapis.com/v0/b/weelo-9c10a.appspot.com/o/Account%2F271ce34b-8be1-4fcb-bb28-ef0502909f45.jpg?alt=media&token=52e427f9-5cd5-4449-be9a-cb1b57bbe934\",\r\n    \"birthday\": \"1992-11-25T20:44:11\",\r\n    \"accountType\": 1,\r\n    \"roleType\": 2,\r\n    \"create\": \"2023-09-23T14:16:13.9566667\",\r\n    \"update\": \"2023-09-23T14:16:13.9566667\",\r\n    \"enabled\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Url}}Account/Insert",
+							"host": [
+								"{{Url}}Account"
+							],
+							"path": [
+								"Insert"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"{{AccountNew}}\",\r\n    \"name\": \"Alejo Velez\",\r\n    \"address\": \"8098-8000 Collins Ave, Miami Beach, FL 33141, EE. UU.\",\r\n    \"phone\": \"7863503856\",\r\n    \"email\": \"alejo@gmail.com\",\r\n    \"password\": \"October31*\",\r\n    \"photoUrl\": \"https://firebasestorage.googleapis.com/v0/b/weelo-9c10a.appspot.com/o/Account%2F271ce34b-8be1-4fcb-bb28-ef0502909f45.jpg?alt=media&token=52e427f9-5cd5-4449-be9a-cb1b57bbe934\",\r\n    \"birthday\": \"1992-11-25T20:44:11\",\r\n    \"accountType\": 1,\r\n    \"roleType\": 2,\r\n    \"create\": \"2023-09-23T14:16:13.9566667\",\r\n    \"update\": \"2023-09-23T14:16:13.9566667\",\r\n    \"enabled\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Url}}Account/Update",
+							"host": [
+								"{{Url}}Account"
+							],
+							"path": [
+								"Update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}Account/Delete/{{AccountNew}}",
+							"host": [
+								"{{Url}}Account"
+							],
+							"path": [
+								"Delete",
+								"{{AccountNew}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Property",
+			"item": [
+				{
+					"name": "Find",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"if (jsonData &&  jsonData.length > 0 && jsonData[0].id) {    \r",
+									"    pm.environment.set(\"Property\", jsonData[0].id);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"idCity\": \"{{City}}\",\r\n  \"idZone\": \"00000000-0000-0000-0000-000000000000\",\r\n  \"yearMin\": 2000,\r\n  \"yearMax\": 3000,\r\n  \"priceMin\": 0,\r\n  \"priceMax\": 0,\r\n  \"roomsMin\": 1,\r\n  \"roomsMax\": 10,\r\n  \"page\": 0,\r\n  \"propertyType\": 0,\r\n  \"conditionType\": 0,\r\n  \"securityType\": 0,\r\n  \"areaType\": 0,\r\n  \"withFurnished\": 0,\r\n  \"withGarages\": 0,\r\n  \"withSwimmingPool\": 0,\r\n  \"withGym\": 0,\r\n  \"withOceanfront\": 0,\r\n  \"withImages\": 0,\r\n  \"orderProperty\": 0,\r\n  \"enabledProperty\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Url}}Property/Find",
+							"host": [
+								"{{Url}}Property"
+							],
+							"path": [
+								"Find"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}Property/{{Property}}",
+							"host": [
+								"{{Url}}Property"
+							],
+							"path": [
+								"{{Property}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"if (jsonData &&  jsonData.data && jsonData.data.id) {    \r",
+									"    pm.environment.set(\"PropertyNew\", jsonData.data.id);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"00000000-0000-0000-0000-000000000000\",\r\n    \"name\": \"Furnished house in COLLINS AVE\",\r\n    \"description\": \"IMPECCABLY DESIGNED ART DECO PENTHOUSE MASTERPIECE BY WETZELS BROWN PARTNERS OF AMSTERDAM CROWNS FAENA HOUSE...ONE OF THE MOST EXCLUSIVE BOUTIQUE TOWERS IN MIAMI BEACH CREATED BY FOSTER + PARTNERS! Mansion in the Sky w/ 270° Views of Ocean, City & Bay. 6 Beds + 6.5 Baths in 6,400 SF of Living Space & Nearly 4,000 SF of Exterior Space. Private Elevator Foyer Arrival into Fine Art Gallery. Nanz Ebony Handles Greet you w/ Ocean Views. Italian Terrazzo Floors t/o Entertaining Areas w/ Dining for 14 Guests. High-Gloss Ebony Bookcase by Metrica + LED Lighting. Molteni Gourmet Eat-in Kitchen + Miele Appliances. Oceanfront Master Suite w/ Custom Built Ebony Furnishings. Rare Textured & Hand-Painted Walls in All Bedrooms. All Baths equipped w/ Dornbracht & Duravit Fixtures. Crestron Home Automation.\",\r\n    \"address\": \"3315 COLLINS AVE #PH-A,MIAMI BEACH,FL 33140 2223\",\r\n    \"latitude\": 25.81,\r\n    \"longitude\": -80.12,\r\n    \"year\": 2020,\r\n    \"price\": 30500000,\r\n    \"enabled\": true,\r\n    \"create\": \"2023-09-27T20:33:09.08\",\r\n    \"update\": \"2023-09-28T02:53:53.0207337\",\r\n    \"propertyType\": 1,\r\n    \"type\": \"Apartment\",\r\n    \"conditionType\": 2,\r\n    \"condition\": \"Built\",\r\n    \"securityType\": 1,\r\n    \"security\": \"Good\",\r\n    \"areaType\": 1,\r\n    \"area\": \"Residential\",\r\n    \"furnished\": true,\r\n    \"rooms\": 3,\r\n    \"bathrooms\": 2,\r\n    \"totalSquareFeet\": 2500,\r\n    \"garages\": 2,\r\n    \"swimmingPool\": true,\r\n    \"gym\": true,\r\n    \"oceanfront\": true,\r\n    \"elevator\": true,\r\n    \"floor\": 5,\r\n    \"levels\": 2,\r\n    \"zoneId\": \"{{Zone}}\",\r\n    \"ownerId\": \"{{Account}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Url}}Property",
+							"host": [
+								"{{Url}}Property"
+							]
+						},
+						"description": "This Insert validates that the address Address,ZoneId,OwnerId,Year does not exist so that repeated Properties do not exist"
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"{{PropertyNew}}\",\r\n    \"name\": \"Furnished house in COLLINS AVE\",\r\n    \"description\": \"IMPECCABLY DESIGNED ART DECO PENTHOUSE MASTERPIECE BY WETZELS BROWN PARTNERS OF AMSTERDAM CROWNS FAENA HOUSE...ONE OF THE MOST EXCLUSIVE BOUTIQUE TOWERS IN MIAMI BEACH CREATED BY FOSTER + PARTNERS! Mansion in the Sky w/ 270° Views of Ocean, City & Bay. 6 Beds + 6.5 Baths in 6,400 SF of Living Space & Nearly 4,000 SF of Exterior Space. Private Elevator Foyer Arrival into Fine Art Gallery. Nanz Ebony Handles Greet you w/ Ocean Views. Italian Terrazzo Floors t/o Entertaining Areas w/ Dining for 14 Guests. High-Gloss Ebony Bookcase by Metrica + LED Lighting. Molteni Gourmet Eat-in Kitchen + Miele Appliances. Oceanfront Master Suite w/ Custom Built Ebony Furnishings. Rare Textured & Hand-Painted Walls in All Bedrooms. All Baths equipped w/ Dornbracht & Duravit Fixtures. Crestron Home Automation.\",\r\n    \"address\": \"3315 COLLINS AVE #PH-A,MIAMI BEACH,FL 33140 2223\",\r\n    \"latitude\": 25.81,\r\n    \"longitude\": -80.12,\r\n    \"year\": 2020,\r\n    \"price\": 30500000,\r\n    \"enabled\": true,\r\n    \"create\": \"2023-09-27T20:33:09.08\",\r\n    \"update\": \"2023-09-28T02:53:53.0207337\",\r\n    \"propertyType\": 1,\r\n    \"type\": \"Apartment\",\r\n    \"conditionType\": 2,\r\n    \"condition\": \"Built\",\r\n    \"securityType\": 1,\r\n    \"security\": \"Good\",\r\n    \"areaType\": 1,\r\n    \"area\": \"Residential\",\r\n    \"furnished\": true,\r\n    \"rooms\": 3,\r\n    \"bathrooms\": 2,\r\n    \"totalSquareFeet\": 2500,\r\n    \"garages\": 2,\r\n    \"swimmingPool\": true,\r\n    \"gym\": true,\r\n    \"oceanfront\": true,\r\n    \"elevator\": true,\r\n    \"floor\": 5,\r\n    \"levels\": 2,\r\n    \"zoneId\": \"{{Zone}}\",\r\n    \"ownerId\": \"{{Account}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Url}}Property",
+							"host": [
+								"{{Url}}Property"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enable",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}Property/Enable?id={{PropertyNew}}&enable=true",
+							"host": [
+								"{{Url}}Property"
+							],
+							"path": [
+								"Enable"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{PropertyNew}}"
+								},
+								{
+									"key": "enable",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Price",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}Property/Price?id={{PropertyNew}}&price=32350000",
+							"host": [
+								"{{Url}}Property"
+							],
+							"path": [
+								"Price"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{PropertyNew}}"
+								},
+								{
+									"key": "price",
+									"value": "32350000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}Property/{{PropertyNew}}",
+							"host": [
+								"{{Url}}Property"
+							],
+							"path": [
+								"{{PropertyNew}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PropertyImage",
+			"item": [
+				{
+					"name": "GetAllForProperty",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"if (jsonData &&  jsonData.length > 0 && jsonData[0].id) {    \r",
+									"    pm.environment.set(\"PropertyImage\", jsonData[0].id);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}PropertyImage/GetAllForProperty/{{Property}}",
+							"host": [
+								"{{Url}}PropertyImage"
+							],
+							"path": [
+								"GetAllForProperty",
+								"{{Property}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}PropertyImage/{{PropertyImage}}",
+							"host": [
+								"{{Url}}PropertyImage"
+							],
+							"path": [
+								"{{PropertyImage}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "{",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "IdProperty",
+									"value": "{{Property}}",
+									"type": "text"
+								},
+								{
+									"key": "File",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "}",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{Url}}PropertyImage/Insert",
+							"host": [
+								"{{Url}}PropertyImage"
+							],
+							"path": [
+								"Insert"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}PropertyImage/Enable?id={{PropertyImage}}&enable=true",
+							"host": [
+								"{{Url}}PropertyImage"
+							],
+							"path": [
+								"Enable"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{PropertyImage}}"
+								},
+								{
+									"key": "enable",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PropertyTrace",
+			"item": [
+				{
+					"name": "GetAllForProperty",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}PropertyTrace/GetAllForProperty/{{Property}}",
+							"host": [
+								"{{Url}}PropertyTrace"
+							],
+							"path": [
+								"GetAllForProperty",
+								"{{Property}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"dateSale\": \"2023-09-27T20:33:09.08\",\r\n  \"name\": \"First Sale\",\r\n  \"value\": 30500000,\r\n  \"tax\": 500000,\r\n  \"ownerNewId\": \"{{Account}}\",\r\n  \"ownerOldId\": \"{{Account2}}\",\r\n  \"propertyId\": \"{{Property}}\",\r\n  \"create\": \"2023-09-27T20:33:09.08\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Url}}PropertyTrace/Insert",
+							"host": [
+								"{{Url}}PropertyTrace"
+							],
+							"path": [
+								"Insert"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Country",
+			"item": [
+				{
+					"name": "GetAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"if (jsonData &&  jsonData.length > 0 && jsonData[0].id) {    \r",
+									"    pm.environment.set(\"Country\", jsonData[0].id);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}Country/GetAll",
+							"host": [
+								"{{Url}}Country"
+							],
+							"path": [
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}Country/{{Country}}",
+							"host": [
+								"{{Url}}Country"
+							],
+							"path": [
+								"{{Country}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "State",
+			"item": [
+				{
+					"name": "GetAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"if (jsonData &&  jsonData.length > 0 && jsonData[0].id) {    \r",
+									"    pm.environment.set(\"State\", jsonData[0].id);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}State/GetAll",
+							"host": [
+								"{{Url}}State"
+							],
+							"path": [
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}State/{{State}}",
+							"host": [
+								"{{Url}}State"
+							],
+							"path": [
+								"{{State}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "City",
+			"item": [
+				{
+					"name": "GetAll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"if (jsonData &&  jsonData.length > 0 && jsonData[0].id) {    \r",
+									"    pm.environment.set(\"City\", jsonData[0].id);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}City/GetAll",
+							"host": [
+								"{{Url}}City"
+							],
+							"path": [
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"if (jsonData &&  jsonData.length > 0 && jsonData[0].id) {    \r",
+									"    pm.environment.set(\"City\", jsonData[0].id);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}City/{{City}}",
+							"host": [
+								"{{Url}}City"
+							],
+							"path": [
+								"{{City}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Zone",
+			"item": [
+				{
+					"name": "GetAllForCity",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"if (jsonData &&  jsonData.length > 0 && jsonData[0].id) {    \r",
+									"    pm.environment.set(\"Zone\", jsonData[0].id);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}Zone/GetAllForCity/{{City}}",
+							"host": [
+								"{{Url}}Zone"
+							],
+							"path": [
+								"GetAllForCity",
+								"{{City}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}Zone/{{Zone}}",
+							"host": [
+								"{{Url}}Zone"
+							],
+							"path": [
+								"{{Zone}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetInfo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Url}}Zone/GetInfo/{{Zone}}",
+							"host": [
+								"{{Url}}Zone"
+							],
+							"path": [
+								"GetInfo",
+								"{{Zone}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
